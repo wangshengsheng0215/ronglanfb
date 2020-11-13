@@ -22,7 +22,7 @@ Route::post('ronglanfb/register','Api\LoginController@register');//注册
 Route::get('ronglanfb/getcode','Api\LoginController@getcode');//注册
 Route::get('ronglanfb/getactoken','Api\LoginController@getactoken');//注册
 Route::post('ronglanfb/sendregistercode','Api\LoginController@sendregistercode');//发送注册验证码
-Route::post('ronglanfb/sendlogincode','Api\LoginController@sendlogincode');//发送注册验证码
+Route::post('ronglanfb/sendlogincode','Api\LoginController@sendlogincode');//发送登录验证码
 Route::post('ronglanfb/login','Api\LoginController@login');//登录
 Route::post('ronglanfb/mobilelogin','Api\LoginController@mobilelogin');//手机验证登录
 Route::post('ronglanfb/emailcode','Api\MailController@emailcode');//发送邮箱验证码

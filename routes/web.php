@@ -11,7 +11,7 @@
 |
 */
 
-//Route::get('/', function () {return view('welcome');});
+Route::get('/', function () {return view('welcome');});
 
 Route::group(['prefix'=>'admin','middleware'=>'check.login'],function (){
     Route::post('ronglanfb/projectlist','Admin\ProjectController@projectlist'); //项目列表

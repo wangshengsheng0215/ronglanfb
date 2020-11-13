@@ -66,6 +66,40 @@ class ProjectController extends Controller
             return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
         }
     }
-    //项目规划
+
+
+    //项目审核
+    public function projectshenhe(Request $request){
+        $user = \Auth::user();
+        if($user){
+            try {
+                $rules = [
+                    'shenhestatus'=>'required',
+                    'proid'=>'required',
+
+                ];
+                //自定义消息
+                $messages = [
+                    'shenhestatus.required' => '审核状态不为空',
+                    'proid.required' => '项目id不为空',
+
+                ];
+                $this->validate($request, $rules, $messages);
+                $proid = $request->input('proid');
+                $shenhestatus = $request->input('shenhestatus');
+                $a = Project::where('id',$proid)->update(['project_status'=>$shenhestatus]);
+                if ($a){
+                    return json_encode(['errcode'=>'1','errmsg'=>'审核成功'],JSON_UNESCAPED_UNICODE );
+                }else{
+                    return json_encode(['errcode'=>'201','errmsg'=>'审核不成功'],JSON_UNESCAPED_UNICODE );
+                }
+            }catch (ValidationException $validationException){
+                $messages = $validationException->validator->getMessageBag()->first();
+                return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+            }
+        }else{
+            return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
+        }
+    }
 
 }

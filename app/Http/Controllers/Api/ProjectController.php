@@ -177,7 +177,7 @@ class ProjectController extends Controller
     public function addproject(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 $project_class = $request->input('project_class');
                 //1项目规划2整包项目3外包项目
                 if($project_class == 1){
@@ -313,5 +313,7 @@ class ProjectController extends Controller
             return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
         }
     }
+
+
 
 }

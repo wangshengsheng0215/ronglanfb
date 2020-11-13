@@ -540,7 +540,7 @@ class UserController extends Controller
     public function mywork(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 try {
                     $rules = [
                         'type'=>'required',
@@ -624,7 +624,7 @@ class UserController extends Controller
     public function myhomepage(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 if($user->certification_type == 3 ) {
                     $programmer = Programmer::where('uid',$user->id)->first();
                     $starttime = $programmer->starttime;

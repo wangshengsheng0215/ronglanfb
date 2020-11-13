@@ -24,7 +24,7 @@ class LoginController extends Controller
             $rules = [
                 'username'=>'required|unique:users,username',
                 'password'=>'required',
-                'mobile'=>'required|unique:users,mobile|regex:/^1[0-9][0-9]{9}$/',
+                'mobile'=>'required|unique:users,mobile|regex:/^1[3456789][0-9]{9}$/',
                 'code'=>'required',
 
             ];
@@ -77,7 +77,7 @@ class LoginController extends Controller
         try {
             //规则
             $rules = [
-                'mobile'=>'required|regex:/^1[345789][0-9]{9}$/',
+                'mobile'=>'required|regex:/^1[3456789][0-9]{9}$/',
             ];
             //自定义消息
             $messages = [
@@ -180,7 +180,7 @@ class LoginController extends Controller
         try {
             //规则
             $rules = [
-                'mobile'=>'required|regex:/^1[345789][0-9]{9}$/',
+                'mobile'=>'required|regex:/^1[3456789][0-9]{9}$/',
             ];
             //自定义消息
             $messages = [

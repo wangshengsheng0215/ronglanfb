@@ -58,6 +58,7 @@ class LoginController extends Controller
             $user->head_portrait = 'img/head_port.png';
             $user->certification_status = 1;
             $user->certification_type = 1;
+            $user->certification_shenhe = 1;
             $user->is_project = 1;
             $a = $user->save();
             if($a){
@@ -142,6 +143,7 @@ class LoginController extends Controller
                         $data['role'] = $user->role;
                         $data['certification_status'] = $user->certification_status;
                         $data['certification_type'] = $user->certification_type;
+                        $data['certification_shenhe'] = $user->certification_shenhe;
                         $data['head_port'] = $user->head_portrait;
                         $data['mobile'] = $user->mobile;
                         $data['status'] = $user->status;
@@ -251,6 +253,7 @@ class LoginController extends Controller
                     $data['role'] = $user->role;
                     $data['certification_status'] = $user->certification_status;
                     $data['certification_type'] = $user->certification_type;
+                    $data['certification_shenhe'] = $user->certification_shenhe;
                     $data['head_port'] = $user->head_portrait;
                     $data['mobile'] = $user->mobile;
                     $data['status'] = $user->status;

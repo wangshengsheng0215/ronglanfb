@@ -336,7 +336,8 @@ class UserController extends Controller
                     $user->personal_profile = $personal_profile;
                     $user->card_file = $card_file;
                     $user->certification_status = 2;
-                    $user->certification_type = 2;
+                    $user->certification_type = 1;
+                    $user->certification_shenhe = 2;
                     if($user->save()){
                         return json_encode(['errcode'=>'1','errmsg'=>'更新成功'],JSON_UNESCAPED_UNICODE );
                     }
@@ -360,7 +361,7 @@ class UserController extends Controller
     public function ProgrammerCertificate(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 if($user->certification_type == 2){
                     try {
                         //规则/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
@@ -426,7 +427,7 @@ class UserController extends Controller
 
 
                         if($programmer->save()){
-                            Users::where('id',$programmer->uid)->update(['certification_type'=>3]);
+                            Users::where('id',$programmer->uid)->update(['certification_shenhe'=>5,'certification_type'=>2,'certification_status'=>2]);
                             return json_encode(['errcode'=>'1','errmsg'=>'保存成功'],JSON_UNESCAPED_UNICODE );
                         }
                         return json_encode(['errcode'=>'201','errmsg'=>'保存失败'],JSON_UNESCAPED_UNICODE );
@@ -441,7 +442,7 @@ class UserController extends Controller
                     return json_encode(['errcode'=>'4003','errmsg'=>'已程序员认证'],JSON_UNESCAPED_UNICODE );
                 }
             }else{
-                return json_encode(['errcode'=>'4003','errmsg'=>'未认证'],JSON_UNESCAPED_UNICODE );
+                return json_encode(['errcode'=>'4003','errmsg'=>'未审核/未通过'],JSON_UNESCAPED_UNICODE );
             }
         }else{
             return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
@@ -453,7 +454,7 @@ class UserController extends Controller
     public function Enterprisecertificate(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 if($user->certification_type == 2){
                     try {
                     $rules = [
@@ -495,9 +496,9 @@ class UserController extends Controller
                         $enterprise->type_int = rtrim($str,',');
                     $Personal = Users::where('username',$request->input('enterprise_people'))->first();
                     if($Personal){
-                        if ($Personal->certification_status == 2){
+                        if ($Personal->certification_type == 2 && $Personal->certification_shenhe == 3){
                             if($enterprise->save()){
-                                Users::where('id',$enterprise->uid)->update(['certification_type'=>4]);
+                                Users::where('id',$enterprise->uid)->update(['certification_shenhe'=>8,'certification_type'=>2,'certification_status'=>2]);
                                 return json_encode(['errcode'=>'1','errmsg'=>'保存成功'],JSON_UNESCAPED_UNICODE );
                             }
                             return json_encode(['errcode'=>'201','errmsg'=>'保存失败'],JSON_UNESCAPED_UNICODE );
@@ -516,7 +517,7 @@ class UserController extends Controller
                     return json_encode(['errcode'=>'4003','errmsg'=>'已程序员认证'],JSON_UNESCAPED_UNICODE );
                 }
             }else{
-                return json_encode(['errcode'=>'4003','errmsg'=>'未认证'],JSON_UNESCAPED_UNICODE );
+                return json_encode(['errcode'=>'4003','errmsg'=>'未审核/未通过'],JSON_UNESCAPED_UNICODE );
             }
         }else{
             return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );

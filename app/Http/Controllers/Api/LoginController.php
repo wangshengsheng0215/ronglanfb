@@ -143,6 +143,17 @@ class LoginController extends Controller
                         $data['certification_status'] = $user->certification_status;
                         $data['certification_type'] = $user->certification_type;
                         $data['head_port'] = $user->head_portrait;
+                        $data['mobile'] = $user->mobile;
+                        $data['status'] = $user->status;
+                        $data['name'] = $user->name;
+                        $data['card_id'] = $user->card_id;
+                        $data['email'] = $user->email;
+                        $data['zfb_Alipay'] = $user->zfb_Alipay;
+                        $data['personal_profile'] = $user->personal_profile;
+                        $data['card_file'] = $user->card_file;
+                        $data['is_project'] = $user->is_project;
+                        $data['project_cn'] = $user->project_cn;
+                        $data['addtime'] = $user->addtime;
                         $data['token'] = 'bearer ' . $token;
                         return json_encode(['errcode'=>'1','errmsg'=>$messages,'data'=>$data],JSON_UNESCAPED_UNICODE );
                     }else{

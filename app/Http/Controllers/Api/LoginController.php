@@ -99,6 +99,30 @@ class LoginController extends Controller
 
     }
 
+    public function sendupcode(Request $request){
+        try {
+            //规则
+            $rules = [
+                'mobile'=>'required|regex:/^1[3456789][0-9]{9}$/',
+            ];
+            //自定义消息
+            $messages = [
+                'mobile.required' => '请输入手机号',
+                'mobile.regex' => '手机号不合法',
+            ];
+
+            $this->validate($request, $rules, $messages);
+            //获取用户和手机号
+            $mobile = $request->input('mobile');
+            $smslog = (new Smslog())->sendMobileVerifyCode($mobile,2);
+            return $smslog;
+
+        }catch (ValidationException $validationException){
+            $messages = $validationException->validator->getMessageBag()->first();
+            return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+        }
+    }
+
 
     //账号密码登录接口
     public function login(Request $request){

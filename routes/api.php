@@ -26,6 +26,7 @@ Route::post('ronglanfb/sendlogincode','Api\LoginController@sendlogincode');//发
 Route::post('ronglanfb/login','Api\LoginController@login');//登录
 Route::post('ronglanfb/mobilelogin','Api\LoginController@mobilelogin');//手机验证登录
 Route::post('ronglanfb/emailcode','Api\MailController@emailcode');//发送邮箱验证码
+Route::post('ronglanfb/sendupcode','Api\LoginController@sendupcode');//信息变更验证码
 
 Route::group(['prefix'=>'ronglanfb','middleware'=>'check.login'],function (){
     Route::get('userlist','Api\UserController@userlist');

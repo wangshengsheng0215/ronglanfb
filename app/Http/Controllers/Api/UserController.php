@@ -297,6 +297,8 @@ class UserController extends Controller
                     $rules = [
                         'name'=>'required',
                         'card_id'=>'required|identitycards',
+                        'mobile'=>'required|regex:/^1[3456789][0-9]{9}$/',
+                        'mobilecode'=>'required',
                         'email'=>'required|email',
                         'emailcode'=>'required',
                         'zfb_Alipay'=>'required',
@@ -307,6 +309,9 @@ class UserController extends Controller
                     $messages = [
                         'name.required' => '真实姓名不为空',
                         'card_id.required' => '身份证号不为空',
+                        'mobile.required' => '请输入手机号',
+                        'mobile.regex' => '手机号不合法',
+                        'mobilecode.required' => '手机验证码不为空',
                         'email.required' => '邮箱不为空',
                         'emailcode.required' => '邮箱验证码不为空',
                         'zfb_Alipay.required' => '支付宝账号不为空',
@@ -324,14 +329,21 @@ class UserController extends Controller
                     $card_file = $request->input('card_file');
                     $email = $request->input('email');
                     $code = $request->input('emailcode');
+                    $mobile = $request->input('mobile');
+                    $mobilecode = $request->input('mobilecode');
                     $checkcode = Sms::checkCode($email,$code);
                     if(is_array($checkcode)){
                         return json_encode($checkcode,JSON_UNESCAPED_UNICODE);
+                    }
+                    $checkcode1 = Sms::checkCode($mobile,$mobilecode);
+                    if(is_array($checkcode1)){
+                        return json_encode($checkcode1,JSON_UNESCAPED_UNICODE);
                     }
 
                     $user->name = $name;
                     $user->card_id = $card_id;
                     $user->email = $email;
+                    $user->mobile = $mobile;
                     $user->zfb_Alipay = $zfb_Alipay;
                     $user->personal_profile = $personal_profile;
                     $user->card_file = $card_file;

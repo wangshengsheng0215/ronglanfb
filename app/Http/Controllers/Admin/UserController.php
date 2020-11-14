@@ -39,7 +39,7 @@ class UserController extends Controller
                     if($userclass == 4){
                         $where .= ' and enterprise_name like "%' . $sreach . '%"';
                     }else{
-                        $where .= ' and username like "%' . $sreach . '%"';
+                        $where .= ' and name like "%' . $sreach . '%"';
                     }
                 }
                 if($userstatus == 1){

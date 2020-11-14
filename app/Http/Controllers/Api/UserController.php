@@ -457,7 +457,7 @@ class UserController extends Controller
                         $programmer->dayamount = $request->input('dayamount');
                         $programmer->monthamount = $request->input('monthamount');
                         $programmer->projectex = $request->input('projectex');
-                        $programmer->filename = implode($request->input('filename'));
+                        $programmer->filename = implode(',',$request->input('filename'));
                         $uctype = config('userconfig.type_cn');
                         $str = '';
                         foreach ($request->input('type_cn') as $v){
@@ -527,7 +527,7 @@ class UserController extends Controller
                     $enterprise->enterprise_people = $request->input('enterprise_people');
                     $enterprise->type_cn = implode(',',$request->input('type_cn'));
                     $enterprise->enterprise_Introduction = $request->input('enterprise_Introduction');
-                    $enterprise->filename = $request->input('filename');
+                    $enterprise->filename = implode(',',$request->input('filename'));
                         $uctype = config('userconfig.type_cn');
                         $str = '';
                         foreach ($request->input('type_cn') as $v){

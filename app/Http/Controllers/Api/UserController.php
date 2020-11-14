@@ -9,6 +9,7 @@ use App\Service\ImageUploadhandler;
 use App\Service\Sms\Sms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -286,7 +287,38 @@ class UserController extends Controller
         }
     }
 
-
+    //单独验证手机号验证码和邮箱验证码
+    public function validation(Request $request){
+        try {
+               $rules = [
+                   'mobilemail'=>'required',
+                   'code'=>'required'
+               ];
+            $messages = [
+                'mobilemail.required' => '手机号/邮箱不为空',
+                'code.required' => '验证码不为空',
+            ];
+            $this->validate($request, $rules, $messages);
+            $mobilemail = $request->input('mobilemail');
+            $code = $request->input('code');
+            if(!Cache::has($mobilemail)){
+                return json_encode(['errcode'=>'1009','errmsg'=>'验证码已过期'],JSON_UNESCAPED_UNICODE);
+            }
+            $cacheCode = Cache::get($mobilemail);
+            if($cacheCode == $code){
+                return json_encode(['errcode'=>'1','errmsg'=>'ok'],JSON_UNESCAPED_UNICODE);
+            }else{
+                return json_encode(['errcode'=>'2001','errmsg'=>'验证码不一致'],JSON_UNESCAPED_UNICODE);
+            }
+//            $checkcode = Sms::checkCode($mobilemail,$code);
+//            if(is_array($checkcode)){
+//                return json_encode($checkcode,JSON_UNESCAPED_UNICODE);
+//            }
+        }catch (ValidationException $validationException){
+            $messages = $validationException->validator->getMessageBag()->first();
+            return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+        }
+    }
     //认证（个人认证）
     public function PersonalCertificate(Request $request){
         $user = \Auth::user();
@@ -331,14 +363,14 @@ class UserController extends Controller
                     $code = $request->input('emailcode');
                     $mobile = $request->input('mobile');
                     $mobilecode = $request->input('mobilecode');
-                    $checkcode = Sms::checkCode($email,$code);
-                    if(is_array($checkcode)){
-                        return json_encode($checkcode,JSON_UNESCAPED_UNICODE);
-                    }
-                    $checkcode1 = Sms::checkCode($mobile,$mobilecode);
-                    if(is_array($checkcode1)){
-                        return json_encode($checkcode1,JSON_UNESCAPED_UNICODE);
-                    }
+//                    $checkcode = Sms::checkCode($email,$code);
+//                    if(is_array($checkcode)){
+//                        return json_encode($checkcode,JSON_UNESCAPED_UNICODE);
+//                    }
+//                    $checkcode1 = Sms::checkCode($mobile,$mobilecode);
+//                    if(is_array($checkcode1)){
+//                        return json_encode($checkcode1,JSON_UNESCAPED_UNICODE);
+//                    }
 
                     $user->name = $name;
                     $user->card_id = $card_id;
@@ -386,7 +418,6 @@ class UserController extends Controller
                             'starttime'=>'required',
                             'endtime'=>'required',
                             'starthour'=>'required',
-                            'endhour'=>'required',
                             'type_cn'=>'required',
                             'dayamount'=>'required',
                             'monthamount'=>'required',
@@ -403,7 +434,6 @@ class UserController extends Controller
                             'starttime.required' => '开始日期不为空',
                             'endtime.required' => '结束日期不为空',
                             'starthour.required' => '开始时间不为空',
-                            'endhour.required' => '结束时间不为空',
                             'type_cn.required' => '接单方向不为空',
                             'dayamount.required' => '天薪酬不为空',
                             'monthamount.required' => '月薪酬不为空',
@@ -423,12 +453,11 @@ class UserController extends Controller
                         $programmer->starttime = $request->input('starttime');
                         $programmer->endtime = $request->input('endtime');
                         $programmer->starthour = $request->input('starthour');
-                        $programmer->endhour = $request->input('endhour');
                         $programmer->type_cn = implode(',',$request->input('type_cn'));
                         $programmer->dayamount = $request->input('dayamount');
                         $programmer->monthamount = $request->input('monthamount');
                         $programmer->projectex = $request->input('projectex');
-                        $programmer->filename = $request->input('filename');
+                        $programmer->filename = implode($request->input('filename'));
                         $uctype = config('userconfig.type_cn');
                         $str = '';
                         foreach ($request->input('type_cn') as $v){

@@ -48,5 +48,6 @@ Route::group(['prefix'=>'ronglanfb','middleware'=>'check.login'],function (){
     Route::post('projectwhole','Api\ProjectController@projectwhole');//整包项目
     Route::post('projectoutsourcing','Api\ProjectController@projectoutsourcing');//外包项目
     Route::post('addproject','Api\ProjectController@addproject');//新建项目
+    Route::post('validation','Api\UserController@validation');//单独验证
 
 });

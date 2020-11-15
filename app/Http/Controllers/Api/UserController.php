@@ -134,7 +134,7 @@ class UserController extends Controller
     public function updateemail(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 try {
                     //规则
                     $rules = [
@@ -190,7 +190,7 @@ class UserController extends Controller
     public function updatepay(Request $request){
         $user = \Auth::user();
         if($user){
-            if($user->certification_status == 2){
+            if($user->certification_status == 1){
                 try {
                     //规则
                     $rules = [

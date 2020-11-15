@@ -188,7 +188,6 @@ class LoginController extends Controller
                             $endtime = $programmer->endtime;
                             $starthour = $programmer->starthour;
                             $endhour = $programmer->endhour;
-                            $data = [];
                             $data['qualifications'] = $programmer->qualifications;
                             $data['skills'] = $programmer->skills;
                             $data['experience'] = $programmer->experience;
@@ -203,7 +202,6 @@ class LoginController extends Controller
 
                         }elseif ($user->certification_type == 4){
                             $entserprise = Enterprise::where('uid',$user->id)->first();
-                            $data = [];
                             $data['is_project'] = $user->is_project;
                             $data['enterprise_name'] = $entserprise->enterprise_name;
                             $data['enterprise_homepage'] = $entserprise->enterprise_homepage;
@@ -327,7 +325,6 @@ class LoginController extends Controller
                         $endtime = $programmer->endtime;
                         $starthour = $programmer->starthour;
                         $endhour = $programmer->endhour;
-                        $data = [];
                         $data['qualifications'] = $programmer->qualifications;
                         $data['skills'] = $programmer->skills;
                         $data['experience'] = $programmer->experience;
@@ -341,7 +338,6 @@ class LoginController extends Controller
                         $data['endhour'] = $endhour;
                     }elseif ($user->certification_type == 4){
                         $entserprise = Enterprise::where('uid',$user->id)->first();
-                        $data = [];
                         $data['is_project'] = $user->is_project;
                         $data['enterprise_name'] = $entserprise->enterprise_name;
                         $data['enterprise_homepage'] = $entserprise->enterprise_homepage;

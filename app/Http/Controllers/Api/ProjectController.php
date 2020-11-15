@@ -200,6 +200,7 @@ class ProjectController extends Controller
 
                         $this->validate($request, $rules, $messages);
                         $prop = new Project();
+                        $prop->userid = $user->id;
                         $prop->project_name = $request->input('project_name');
                         $prop->project_class = $project_class;
                         $prop->project_status = 1;
@@ -241,6 +242,7 @@ class ProjectController extends Controller
 
                         $this->validate($request, $rules, $messages);
                         $prop = new Project();
+                        $prop->userid = $user->id;
                         $prop->project_name = $request->input('project_name');
                         $prop->project_class = $project_class;
                         $prop->project_status = 1;
@@ -286,6 +288,7 @@ class ProjectController extends Controller
 
                         $this->validate($request, $rules, $messages);
                         $prop = new Project();
+                        $prop->userid = $user->id;
                         $prop->project_name = $request->input('project_name');
                         $prop->project_class = $project_class;
                         $prop->project_status = 1;

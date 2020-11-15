@@ -52,11 +52,19 @@ class UserController extends Controller
                             $list = DB::table('users')
                                 ->join('programmer','users.id','=','programmer.uid')
                                     ->whereRaw($where)->where('certification_type',2)->whereIn('certification_shenhe',[5,7])->paginate($paginate);
+                            foreach ($list as $k=>$v){
+                                $v->filearray = [];
+                                $v->filearray = explode(',',$v->filename);
+                            }
                             break;
                         case 4:
                             $list = DB::table('users')
                                 ->join('enterprise','users.id','=','enterprise.uid')
                                 ->whereRaw($where)->where('certification_type',2)->whereIn('certification_shenhe',[8,10])->paginate($paginate);
+                            foreach ($list as $k=>$v){
+                                $v->filearray = [];
+                                $v->filearray = explode(',',$v->filename);
+                            }
                             break;
                     }
 
@@ -69,11 +77,19 @@ class UserController extends Controller
                             $list = DB::table('users')
                                 ->join('programmer','users.id','=','programmer.uid')
                                 ->whereRaw($where)->where('certification_type',3)->whereIn('certification_shenhe',[6])->paginate($paginate);
+                            foreach ($list as $k=>$v){
+                                $v->filearray = [];
+                                $v->filearray = explode(',',$v->filename);
+                            }
                             break;
                         case 4:
                             $list = DB::table('users')
                                 ->join('enterprise','users.id','=','enterprise.uid')
                                 ->whereRaw($where)->where('certification_type',4)->whereIn('certification_shenhe',[9])->paginate($paginate);
+                            foreach ($list as $k=>$v){
+                                $v->filearray = [];
+                                $v->filearray = explode(',',$v->filename);
+                            }
                             break;
                     }
                 }else{

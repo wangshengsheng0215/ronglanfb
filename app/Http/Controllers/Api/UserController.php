@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Client;
 use App\Models\Enterprise;
 use App\Models\Programmer;
 use App\Models\Users;
@@ -694,5 +695,33 @@ class UserController extends Controller
         }
     }
 
+
+    //客户提交
+    public function addclient(Request $request){
+        try {
+            $rules = [
+                'name'=>'required',
+                'mobile'=>'required',
+            ];
+            //自定义消息
+            $messages = [
+                'name.required' => '客户姓名不为空',
+                'mobile.required' => '手机号不为空',
+            ];
+
+            $this->validate($request, $rules, $messages);
+            $client = new Client();
+            $client->name = $request->input('name');
+            $client->mobile = $request->input('mobile');
+            $client->status = 1;
+            if($client->save()){
+                return json_encode(['errcode'=>'1','errmsg'=>'提交成功'],JSON_UNESCAPED_UNICODE );
+            }
+            return json_encode(['errcode'=>'201','errmsg'=>'提交失败'],JSON_UNESCAPED_UNICODE );
+        }catch (ValidationException $validationException){
+            $messages = $validationException->validator->getMessageBag()->first();
+            return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+        }
+    }
 
 }

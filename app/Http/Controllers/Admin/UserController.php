@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Client;
 use App\Models\Shenhelog;
 use App\Models\Users;
 use Illuminate\Http\Request;
@@ -167,4 +168,71 @@ class UserController extends Controller
         }
     }
 
+    //专属客服
+    public function clientlist(Request $request){
+        $user = \Auth::user();
+        if($user){
+            $paginate = $request->input('paginate')?$request->input('paginate'):10;
+            $sreach = $request->input('sreach');
+            $where = '1=1';
+            if(!empty($sreach)){
+                    $where .= ' and name like "%' . $sreach . '%"';
+
+            }
+            $list = Client::whereRaw($where)->paginate($paginate);
+            return json_encode(['errcode'=>'1','errmsg'=>'ok','data'=>$list],JSON_UNESCAPED_UNICODE);
+        }else{
+            return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
+        }
+    }
+
+    //联系信息填写
+    public function clientupdate(Request $request){
+        $user = \Auth::user();
+        if($user){
+            try {
+                $rules = [
+                    'id'=>'required',
+                    'name'=>'required',
+                    'companyname'=>'required',
+                    'mobile'=>'required',
+                    'email'=>'required',
+                    'fuwu'=>'required',
+                    'xuqiu'=>'required',
+                ];
+                //自定义消息
+                $messages = [
+                    'id.required' => 'id不为空',
+                    'name.required' => '姓名不为空',
+                    'companyname.required' => '公司名称不为空',
+                    'mobile.required' => '手机号不为空',
+                    'email.required' => '邮箱不为空',
+                    'fuwu.required' => '服务不为空',
+                    'xuqiu.required' => '需求不为空',
+
+                ];
+                $this->validate($request, $rules, $messages);
+                $clientid = $request->input('id');
+                $client = Client::where('id',$clientid)->first();
+                $client->name = $request->input('name');
+                $client->companyname = $request->input('companyname');
+                $client->mobile = $request->input('mobile');
+                $client->email = $request->input('email');
+                $client->fuwu = $request->input('fuwu');
+                $client->xuqiu = $request->input('xuqiu');
+                $client->status = 2;
+                if($client->save()){
+                    return json_encode(['errcode'=>'1','errmsg'=>'提交成功'],JSON_UNESCAPED_UNICODE );
+                }
+                return json_encode(['errcode'=>'201','errmsg'=>'提交失败'],JSON_UNESCAPED_UNICODE );
+
+            }catch (ValidationException $validationException){
+                $messages = $validationException->validator->getMessageBag()->first();
+                return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+            }
+
+            }else{
+            return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
+        }
+    }
 }

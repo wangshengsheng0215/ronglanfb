@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Enterprise;
 use App\Models\Loginhistory;
+use App\Models\Programmer;
 use App\Models\Smslog;
 use App\Models\Users;
 use App\Service\Sms\Sms;
@@ -180,6 +182,35 @@ class LoginController extends Controller
                         $data['is_project'] = $user->is_project;
                         $data['project_cn'] = $user->project_cn;
                         $data['addtime'] = $user->addtime;
+                        if($user->certification_type == 3){
+                            $programmer = Programmer::where('uid',$user->id)->first();
+                            $starttime = $programmer->starttime;
+                            $endtime = $programmer->endtime;
+                            $starthour = $programmer->starthour;
+                            $endhour = $programmer->endhour;
+                            $data = [];
+                            $data['qualifications'] = $programmer->qualifications;
+                            $data['skills'] = $programmer->skills;
+                            $data['experience'] = $programmer->experience;
+                            $data['workstatus'] = $programmer->workstatus;
+                            $data['dayamount'] = $programmer->dayamount;
+                            $data['monthamount'] = $programmer->monthamount;
+                            $data['personal_profile'] = $programmer->personal_profile;
+                            $data['starttime'] = $starttime;
+                            $data['endtime'] = $endtime;
+                            $data['starthour'] = $starthour;
+                            $data['endhour'] = $endhour;
+
+                        }elseif ($user->certification_type == 4){
+                            $entserprise = Enterprise::where('uid',$user->id)->first();
+                            $data = [];
+                            $data['is_project'] = $user->is_project;
+                            $data['enterprise_name'] = $entserprise->enterprise_name;
+                            $data['enterprise_homepage'] = $entserprise->enterprise_homepage;
+                            $data['enterprise_address'] = $entserprise->enterprise_address;
+                            $data['enterprise_people'] = $entserprise->enterprise_people;
+                            $data['enterprise_Introduction'] = $entserprise->enterprise_Introduction;
+                        }
                         $data['token'] = 'bearer ' . $token;
                         return json_encode(['errcode'=>'1','errmsg'=>$messages,'data'=>$data],JSON_UNESCAPED_UNICODE );
                     }else{

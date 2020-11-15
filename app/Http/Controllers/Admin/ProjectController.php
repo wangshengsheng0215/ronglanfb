@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ProjectController extends Controller
@@ -92,6 +93,45 @@ class ProjectController extends Controller
                     return json_encode(['errcode'=>'1','errmsg'=>'审核成功'],JSON_UNESCAPED_UNICODE );
                 }else{
                     return json_encode(['errcode'=>'201','errmsg'=>'审核不成功'],JSON_UNESCAPED_UNICODE );
+                }
+            }catch (ValidationException $validationException){
+                $messages = $validationException->validator->getMessageBag()->first();
+                return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+            }
+        }else{
+            return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
+        }
+    }
+
+
+    //项目推送
+    public function projectsend(Request $request){
+        $user = \Auth::user();
+        if($user){
+            try {
+                $rules = [
+                    'proid'=>'required',
+                    'uid'=>'required',
+                ];
+                //自定义消息
+                $messages = [
+                    'proid.required' => '项目id不为空',
+                    'uid.required' => '推送人员不为空',
+                ];
+                $this->validate($request, $rules, $messages);
+                $proid = $request->input('proid');
+                $uid = $request->input('uid');
+                $data = [];
+                foreach ($uid as $k=>$v){
+                    $data[$k]['proid'] = $proid;
+                    $data[$k]['uid'] = $v;
+                    $data[$k]['status'] = 1;
+                }
+               $a = DB::table('projectsend')->insert($data);
+                if ($a){
+                    return json_encode(['errcode'=>'1','errmsg'=>'推送成功'],JSON_UNESCAPED_UNICODE );
+                }else{
+                    return json_encode(['errcode'=>'201','errmsg'=>'推送不成功'],JSON_UNESCAPED_UNICODE );
                 }
             }catch (ValidationException $validationException){
                 $messages = $validationException->validator->getMessageBag()->first();

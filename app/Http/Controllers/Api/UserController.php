@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Models\Client;
 use App\Models\Enterprise;
 use App\Models\Programmer;
+use App\Models\Projectsend;
 use App\Models\Users;
 use App\Service\ImageUploadhandler;
 use App\Service\Sms\Sms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -613,22 +615,35 @@ class UserController extends Controller
                       }
                     }elseif ($type == 2){
                         if($user->certification_type == 3 || $user->certification_type == 4){
-
-
-
+                          $uid = $user->id;
+                            $paginate = $request->input('paginate')?$request->input('paginate'):10;
+                            $list = DB::table('projectsend')
+                                ->join('project','project.id','projectsend.proid')
+                                ->where('uid',$uid)->paginate($paginate);
+                            return json_encode(['errcode'=>'1','data'=>$list,'errmsg'=>'ok'],JSON_UNESCAPED_UNICODE );
                         }else{
                             return json_encode(['errcode'=>'4003','errmsg'=>'未签约认证'],JSON_UNESCAPED_UNICODE );
                         }
                     }elseif ($type == 3){
                         if($user->certification_type == 3 || $user->certification_type == 4){
-
+                            $uid = $user->id;
+                            $paginate = $request->input('paginate')?$request->input('paginate'):10;
+                            $list = DB::table('project')
+                                ->join('projectsend','project.userid','projectsend.uid')
+                                ->where('userid',$uid)->paginate($paginate);
+                            return json_encode(['errcode'=>'1','data'=>$list,'errmsg'=>'ok'],JSON_UNESCAPED_UNICODE );
 
                         }else{
                             return json_encode(['errcode'=>'4003','errmsg'=>'未签约认证'],JSON_UNESCAPED_UNICODE );
                         }
                     }elseif ($type == 4){
                         if($user->certification_type == 3 || $user->certification_type == 4){
-
+                            $uid = $user->id;
+                            $paginate = $request->input('paginate')?$request->input('paginate'):10;
+                            $list = DB::table('projectsend')
+                                ->join('project','project.id','projectsend.proid')
+                                ->where('uid',$uid)->where('status',2)->paginate($paginate);
+                            return json_encode(['errcode'=>'1','data'=>$list,'errmsg'=>'ok'],JSON_UNESCAPED_UNICODE );
 
                         }else{
                             return json_encode(['errcode'=>'4003','errmsg'=>'未签约认证'],JSON_UNESCAPED_UNICODE );

@@ -255,4 +255,11 @@ class UserController extends Controller
             return json_encode(['errcode'=>'402','errmsg'=>'token已过期请替换'],JSON_UNESCAPED_UNICODE );
         }
     }
+
+   //认证过的人员名单
+    public function userlist(Request $request){
+        $paginate = $request->input('paginate')?$request->input('paginate'):10;
+        $list = Users::whereIn('certification_type',[3,4])->whereIn('certification_shenhe',[6,9])->paginate($paginate);
+        return json_encode(['errcode'=>'1','errmsg'=>'ok','data'=>$list],JSON_UNESCAPED_UNICODE);
+    }
 }

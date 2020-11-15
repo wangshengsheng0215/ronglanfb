@@ -71,11 +71,14 @@ class UserController extends Controller
                 }elseif($userstatus == 2){
                     switch ($userclass){
                         case 2:
-                            $list = Users::whereRaw($where)->where('certification_type',2)->whereIn('certification_shenhe',[3])->paginate($paginate);
+                            $list = DB::table('users')
+                                ->join('shenhelog','users.id', '=','shenhelog.userid')
+                                ->whereRaw($where)->where('certification_type',2)->whereIn('certification_shenhe',[3])->paginate($paginate);
                             break;
                         case 3:
                             $list = DB::table('users')
                                 ->join('programmer','users.id','=','programmer.uid')
+                                ->join('shenhelog','users.id', '=','shenhelog.userid')
                                 ->whereRaw($where)->where('certification_type',3)->whereIn('certification_shenhe',[6])->paginate($paginate);
                             foreach ($list as $k=>$v){
                                 $v->filearray = [];
@@ -85,6 +88,7 @@ class UserController extends Controller
                         case 4:
                             $list = DB::table('users')
                                 ->join('enterprise','users.id','=','enterprise.uid')
+                                ->join('shenhelog','users.id', '=','shenhelog.userid')
                                 ->whereRaw($where)->where('certification_type',4)->whereIn('certification_shenhe',[9])->paginate($paginate);
                             foreach ($list as $k=>$v){
                                 $v->filearray = [];
@@ -130,7 +134,7 @@ class UserController extends Controller
                     $shenlog = new Shenhelog();
                     $shenlog->userid = $userid;
                     $shenlog->shenheid = $user->id;
-                    $shenlog->beizhu = '审核通过';
+                    $shenlog->beizhu = $request->input('beizhu');
                     $shenlog->save();
                 }elseif($shenhestatus == 4){
                     $a = Users::where('id',$userid)->update(['certification_shenhe'=>4,'certification_type'=>1,'certification_status'=>1]);
@@ -144,7 +148,7 @@ class UserController extends Controller
                     $shenlog = new Shenhelog();
                     $shenlog->userid = $userid;
                     $shenlog->shenheid = $user->id;
-                    $shenlog->beizhu = '审核通过';
+                    $shenlog->beizhu = $request->input('beizhu');
                     $shenlog->save();
                 }elseif ($shenhestatus == 7){
                     $a = Users::where('id',$userid)->update(['certification_shenhe'=>7,'certification_type'=>2,'certification_status'=>1]);
@@ -158,7 +162,7 @@ class UserController extends Controller
                     $shenlog = new Shenhelog();
                     $shenlog->userid = $userid;
                     $shenlog->shenheid = $user->id;
-                    $shenlog->beizhu = '审核通过';
+                    $shenlog->beizhu = $request->input('beizhu');
                     $shenlog->save();
                 }elseif ($shenhestatus == 10){
                     $a = Users::where('id',$userid)->update(['certification_shenhe'=>10,'certification_type'=>2,'certification_status'=>1]);

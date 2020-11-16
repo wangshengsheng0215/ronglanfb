@@ -51,4 +51,6 @@ Route::group(['prefix'=>'ronglanfb','middleware'=>'check.login'],function (){
     Route::post('addproject','Api\ProjectController@addproject');//新建项目
     Route::post('validation','Api\UserController@validation');//单独验证
 
+    Route::post('readupdate','Api\UserController@readupdate');//推送项目已读状态
+    Route::post('projectfetch','Api\UserController@projectfetch');//项目接取
 });

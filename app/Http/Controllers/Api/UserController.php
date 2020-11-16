@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Client;
 use App\Models\Enterprise;
 use App\Models\Programmer;
+use App\Models\Project;
 use App\Models\Projectsend;
 use App\Models\Users;
 use App\Service\ImageUploadhandler;
@@ -628,9 +629,10 @@ class UserController extends Controller
                         if($user->certification_type == 3 || $user->certification_type == 4){
                             $uid = $user->id;
                             $paginate = $request->input('paginate')?$request->input('paginate'):10;
+
                             $list = DB::table('project')
                                 ->join('projectsend','project.userid','projectsend.uid')
-                                ->where('userid',$uid)->paginate($paginate);
+                                ->where('userid',$uid)->where('project_status',4)->paginate($paginate);
                             return json_encode(['errcode'=>'1','data'=>$list,'errmsg'=>'ok'],JSON_UNESCAPED_UNICODE );
 
                         }else{
@@ -642,7 +644,7 @@ class UserController extends Controller
                             $paginate = $request->input('paginate')?$request->input('paginate'):10;
                             $list = DB::table('projectsend')
                                 ->join('project','project.id','projectsend.proid')
-                                ->where('uid',$uid)->where('status',2)->paginate($paginate);
+                                ->where('uid',$uid)->where('project_status',4)->paginate($paginate);
                             return json_encode(['errcode'=>'1','data'=>$list,'errmsg'=>'ok'],JSON_UNESCAPED_UNICODE );
 
                         }else{
@@ -733,6 +735,63 @@ class UserController extends Controller
                 return json_encode(['errcode'=>'1','errmsg'=>'提交成功'],JSON_UNESCAPED_UNICODE );
             }
             return json_encode(['errcode'=>'201','errmsg'=>'提交失败'],JSON_UNESCAPED_UNICODE );
+        }catch (ValidationException $validationException){
+            $messages = $validationException->validator->getMessageBag()->first();
+            return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+        }
+    }
+
+
+    //修改推送项目状态
+    public function readupdate(Request $request){
+        try {
+            $rules = [
+                'proid'=>'required',
+                'uid'=>'required',
+            ];
+            //自定义消息
+            $messages = [
+                'proid.required' => '项目id不为空',
+                'uid.required' => '用户id不为空',
+            ];
+
+            $this->validate($request, $rules, $messages);
+            $proid = $request->input('proid');
+            $uid = $request->input('uid');
+            $a = Projectsend::where('proid',$proid)->where('uid',$uid)->update(['status'=>2]);
+            if($a){
+                return json_encode(['errcode'=>'1','errmsg'=>'修改成功'],JSON_UNESCAPED_UNICODE );
+            }
+            return json_encode(['errcode'=>'201','errmsg'=>'修改失败'],JSON_UNESCAPED_UNICODE );
+        }catch (ValidationException $validationException){
+            $messages = $validationException->validator->getMessageBag()->first();
+            return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );
+        }
+    }
+
+
+    //项目接与不接
+    public function projectfetch(Request $request){
+        try {
+            $rules = [
+                'proid'=>'required',
+                'status'=>'required',
+            ];
+            //自定义消息
+            $messages = [
+                'proid.required' => '项目id不为空',
+                'status.required' => '状态不为空',
+            ];
+
+            $this->validate($request, $rules, $messages);
+            $proid = $request->input('proid');
+            $status = $request->input('status');
+            //4接取 5不接取
+            $a = Project::where('id',$proid)->update(['project_status'=>$status]);
+            if($a){
+                return json_encode(['errcode'=>'1','errmsg'=>'修改成功'],JSON_UNESCAPED_UNICODE );
+            }
+            return json_encode(['errcode'=>'201','errmsg'=>'修改失败'],JSON_UNESCAPED_UNICODE );
         }catch (ValidationException $validationException){
             $messages = $validationException->validator->getMessageBag()->first();
             return json_encode(['errcode'=>'1001','errmsg'=>$messages],JSON_UNESCAPED_UNICODE );

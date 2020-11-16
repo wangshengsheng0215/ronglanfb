@@ -199,6 +199,7 @@ class LoginController extends Controller
                             $data['endtime'] = $endtime;
                             $data['starthour'] = $starthour;
                             $data['endhour'] = $endhour;
+                            $data['projectex'] = $programmer->projectex;
 
                         }elseif ($user->certification_type == 4){
                             $entserprise = Enterprise::where('uid',$user->id)->first();
@@ -336,6 +337,7 @@ class LoginController extends Controller
                         $data['endtime'] = $endtime;
                         $data['starthour'] = $starthour;
                         $data['endhour'] = $endhour;
+                        $data['projectex'] = $programmer->projectex;
                     }elseif ($user->certification_type == 4){
                         $entserprise = Enterprise::where('uid',$user->id)->first();
                         $data['is_project'] = $user->is_project;
